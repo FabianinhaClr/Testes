@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <title>Rossetto Advogados — Consulta Simples Nacional</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <!-- Bootstrap (opcional, apenas para grid e responsividade) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Paleta: verde escuro institucional + verde médio + dourado discreto */
+        :root{
+            --verde-escuro: #0f5a35;   /* título / botão */
+            --verde-medio:  #2f8a51;   /* detalhes */
+            --dourado:      #b5882b;   /* destaque */
+            --cinza-claro:  #f5f6f7;
+            --texto:        #21312a;
+        }
+
+        html,body{
+            height:100%;
+            margin:0;
+            font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+            background: linear-gradient(180deg, #f7f9f8 0%, #eef3ef 100%);
+            color: var(--texto);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+
+        .wrap {
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding: 32px;
+        }
+
+        .card {
+            width:100%;
+            max-width:620px;
+            background:#ffffff;
+            border-radius:12px;
+            box-shadow: 0 12px 30px rgba(12, 40, 18, 0.08);
+            padding:28px;
+            border: 1px solid rgba(16,64,35,0.04);
+        }
+
+        .brand {
+            display:flex;
+            gap:16px;
+            align-items:center;
+            margin-bottom: 6px;
+        }
+        .brand img {
+            height:64px;
+            object-fit:contain;
+        }
+        .brand h1{
+            font-size:1.4rem;
+            margin:0;
+            color:var(--verde-escuro);
+            letter-spacing:0.2px;
+        }
+
+        .subtitle {
+            color: #516a59;
+            margin:6px 0 22px;
+            font-style:italic;
+        }
+
+        .upload-box{
+            border: 1px dashed rgba(47,138,81,0.12);
+            padding:18px;
+            border-radius:8px;
+            background: linear-gradient(180deg, rgba(47,138,81,0.02), rgba(11,90,53,0.00));
+            margin-bottom:16px;
+        }
+
+        .btn-rossetto {
+            background: var(--verde-escuro);
+            color: white;
+            border: none;
+            padding:10px 18px;
+            border-radius:8px;
+            font-weight:600;
+            box-shadow: 0 6px 16px rgba(15,90,53,0.12);
+        }
+        .btn-rossetto:hover{
+            background: var(--verde-medio);
+        }
+
+        .hint {
+            font-size:0.9rem;
+            color:#6b7b6b;
+        }
+
+        .mensagem {
+            margin-top:14px;
+        }
+
+        /* responsividade */
+        @media (max-width:520px){
+            .brand img { height:52px; }
+            .card { padding:18px; }
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <div class="card">
+        <div class="brand">
+            <!-- Coloque o logo em: static/img/logo_rossetto.png -->
+            <!-- Se você tiver o logo, descomente a linha abaixo -->
+            <!-- <img src="{% static 'img/logo_rossetto.png' %}" alt="Rossetto Advogados"> -->
+            <div>
+                <h1>Rossetto Advogados</h1>
+                <div class="hint">Consultoria e serviços jurídicos — Concórdia</div>
+            </div>
+        </div>
+
+        <p class="subtitle">“Excelência jurídica com agilidade e confiança”</p>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="upload-box">
+                <label class="form-label fw-semibold">Enviar planilha</label>
+                <input class="form-control" type="file" name="file" accept=".xls,.xlsx,.csv" required>
+                <div class="hint mt-2">Formato aceito: XLSX / XLS / CSV. O sistema irá adicionar uma aba "CONSULTA" na planilha enviada.</div>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn-rossetto">Enviar Planilha</button>
+            </div>
+        </form>
+
+        {% if mensagem %}
+            <div class="mensagem alert alert-info mt-3">
+                {{ mensagem }}
+            </div>
+        {% endif %}
+
+        <div class="hint mt-3" style="font-size:0.85rem;">
+            Versão interna — Rossetto Advogados. Não compartilhe dados sensíveis sem autorização.
+        </div>
+    </div>
+</div>
+</body>
+</html>
