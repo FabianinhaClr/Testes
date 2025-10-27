@@ -7,10 +7,13 @@ import calendar
 from datetime import date, datetime
 from dateutil import parser as dparser
 from io import BytesIO
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from openpyxl import load_workbook, Workbook
 from dotenv import load_dotenv
+
 
 load_dotenv()
 
@@ -18,6 +21,39 @@ API_URL = os.getenv("API_URL")
 API_KEY = os.getenv("API_KEY")
 SLEEP = 0.5
 DEBUG = True
+
+
+# ---------------- View Django com download ---------------- #
+@login_required(login_url="login")   # <<--- protege com login
+def upload_file(request):
+    if request.method == "POST" and request.FILES.get("file"):
+        file = request.FILES["file"]
+        try:
+            # (SEU CÓDIGO EXISTENTE AQUI, SEM MUDAR)
+            # ...
+            return response  # seu HttpResponse do Excel
+        except Exception as e:
+            return render(request, "upload.html", {"mensagem": f"❌ Erro ao processar: {e}"})
+    return render(request, "upload.html")
+
+
+# ------- ADICIONE ESTAS VIEWS DE AUTENTICAÇÃO ------- #
+def login_view(request):
+    if request.method == "POST":
+        user = authenticate(
+            request,
+            username=request.POST.get("username"),
+            password=request.POST.get("password"),
+        )
+        if user:
+            login(request, user)
+            return redirect("upload")  # vai para a tela de upload
+        return render(request, "login.html", {"error": "Usuário ou senha inválidos."})
+    return render(request, "login.html")
+
+def logout_view(request):
+    logout(request)
+    return redirect("login")
 
 # ---------------- Funções do script original ---------------- #
 def clean_cnpj(s):
@@ -144,6 +180,9 @@ def is_month_fully_covered(periods, year, month):
     return False, "Não optante/Nunca esteve no Simples Nacional neste mês."
 
 # ---------------- View Django com download ---------------- #
+from django.contrib.auth.decorators import login_required
+
+@login_required(login_url="login")
 def upload_file(request):
     if request.method == "POST" and request.FILES.get("file"):
         file = request.FILES["file"]

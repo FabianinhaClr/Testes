@@ -75,6 +75,10 @@ TEMPLATES = [
     },
 ]
 
+
+LOGIN_URL = "/"
+LOGIN_REDIRECT_URL = "/upload/"
+
 WSGI_APPLICATION = 'projeto.wsgi.application'
 
 
